@@ -441,20 +441,20 @@
                             <label class="block text-slate-700 font-semibold mb-1">Select Payment Method</label>
                             <select id="custPayment" onchange="handlePaymentChange(this.value)" class="w-full bg-slate-50 text-slate-900 border border-slate-300 rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-red-600 font-medium">
                                 <option value="Cash on Delivery" selected>Cash on Delivery (COD)</option>
-                                <option value="JazzCash / EasyPaisa">JazzCash / EasyPaisa (Online Transfer)</option>
+                                <option value="Bank / EasyPaisa / JazzCash Transfer">Bank / EasyPaisa / JazzCash Transfer (Manual)</option>
                             </select>
                         </div>
 
-                        <!-- JAZZCASH & EASYPAISA DETAILS CARD WITH 1-CLICK COPY BUTTON -->
+                        <!-- PAYMENT ACCOUNTS DETAILS CARD WITH 1-CLICK COPY BUTTONS -->
                         <div id="onlinePaymentCard" class="hidden bg-slate-50 border-2 border-red-200 rounded-2xl p-3.5 space-y-3 shadow-sm">
                             <div class="flex items-center justify-between border-b border-slate-200 pb-2">
                                 <div class="flex items-center gap-2">
                                     <span class="w-7 h-7 rounded-lg bg-red-600 text-white flex items-center justify-center font-black text-xs">
-                                        <i class="fa-solid fa-mobile-screen-button"></i>
+                                        <i class="fa-solid fa-building-columns"></i>
                                     </span>
                                     <div>
-                                        <h5 class="text-xs font-black text-slate-900">JazzCash & EasyPaisa</h5>
-                                        <span class="text-[10px] text-slate-500">Account Title: <strong class="text-slate-800">Cook N Roll</strong></span>
+                                        <h5 class="text-xs font-black text-slate-900">Manual Payment Transfer</h5>
+                                        <span class="text-[10px] text-slate-500">Account Title: <strong class="text-slate-900 font-bold">Abdulrazaq</strong></span>
                                     </div>
                                 </div>
                                 <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded">
@@ -462,34 +462,51 @@
                                 </span>
                             </div>
 
-                            <!-- Account 1: 0307-6248846 -->
-                            <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between">
-                                <div>
-                                    <span class="text-[10px] text-slate-500 block font-medium">Primary Account</span>
-                                    <span class="text-sm font-black text-red-600 tracking-wider font-mono" id="accNumber1">03076248846</span>
+                            <!-- Allied Bank Account -->
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <span class="text-[10px] text-slate-500 block font-medium">Allied Bank (ABL) • Title: Abdulrazaq</span>
+                                    <span class="text-xs font-black text-red-600 tracking-wider font-mono block truncate" id="accNumber1">51990020089084120018</span>
                                 </div>
                                 <button 
                                     type="button"
-                                    onclick="copyToClipboard('03076248846', 'accBtn1')" 
+                                    onclick="copyToClipboard('51990020089084120018', 'accBtn1')" 
                                     id="accBtn1"
-                                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm"
+                                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink-0"
                                 >
                                     <i class="fa-regular fa-copy"></i>
                                     <span>Copy</span>
                                 </button>
                             </div>
 
-                            <!-- Account 2: 0308-4094760 -->
-                            <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between">
-                                <div>
-                                    <span class="text-[10px] text-slate-500 block font-medium">Secondary Account</span>
-                                    <span class="text-sm font-black text-red-600 tracking-wider font-mono" id="accNumber2">03084094760</span>
+                            <!-- EasyPaisa Account -->
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <span class="text-[10px] text-slate-500 block font-medium">EasyPaisa Account • Title: Abdulrazaq</span>
+                                    <span class="text-xs font-black text-red-600 tracking-wider font-mono block" id="accNumber2">03076248846</span>
                                 </div>
                                 <button 
                                     type="button"
-                                    onclick="copyToClipboard('03084094760', 'accBtn2')" 
+                                    onclick="copyToClipboard('03076248846', 'accBtn2')" 
                                     id="accBtn2"
-                                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm"
+                                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink-0"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>Copy</span>
+                                </button>
+                            </div>
+
+                            <!-- JazzCash Account -->
+                            <div class="bg-white p-2.5 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+                                <div class="min-w-0 flex-1">
+                                    <span class="text-[10px] text-slate-500 block font-medium">JazzCash Account • Title: Abdulrazaq</span>
+                                    <span class="text-xs font-black text-red-600 tracking-wider font-mono block" id="accNumber3">03076248846</span>
+                                </div>
+                                <button 
+                                    type="button"
+                                    onclick="copyToClipboard('03076248846', 'accBtn3')" 
+                                    id="accBtn3"
+                                    class="bg-red-600 hover:bg-red-700 text-white text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm shrink-0"
                                 >
                                     <i class="fa-regular fa-copy"></i>
                                     <span>Copy</span>
@@ -497,7 +514,7 @@
                             </div>
 
                             <p class="text-[10px] text-slate-500 italic text-center">
-                                * Transfer payment & share screenshot on WhatsApp after placing order below.
+                                * Transfer payment manually & share payment receipt screenshot on WhatsApp after placing your order below.
                             </p>
                         </div>
                     </div>
@@ -2025,7 +2042,7 @@
         // --- 9. PAYMENT METHOD LOGIC ---
         function handlePaymentChange(val) {
             const card = document.getElementById('onlinePaymentCard');
-            if (val.includes('JazzCash')) {
+            if (val !== 'Cash on Delivery') {
                 card.classList.remove('hidden');
             } else {
                 card.classList.add('hidden');
