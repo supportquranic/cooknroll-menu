@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The PIZZA Master | Online Digital Menu & WhatsApp Ordering</title>
+    <meta name="description" content="Order fresh, hot, and cheesy pizzas, burger deals, pastas, and wings from The PIZZA Master Lahore. Free delivery within 3km!">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            yellow: '#fbbf24',
+                            yellowHover: '#f59e0b',
+                            gold: '#f59e0b',
+                            goldDark: '#d97706',
+                            pitchBlack: '#000000',
+                            cardBg: '#121212',
+                            cardBorder: '#242424',
+                            inputBg: '#0a0a0a',
+                            inputBorder: '#282828'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'soft': '0 8px 30px rgba(0, 0, 0, 0.9)',
+                        'card': '0 4px 20px rgba(251, 191, 36, 0.1)',
+                        'floating': '0 12px 40px rgba(245, 158, 11, 0.4)',
+                        'modal': '0 25px 60px -15px rgba(0, 0, 0, 0.98)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000000;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            max-width: 480px;
+            background-color: #050505;
+            min-height: 100vh;
+            position: relative;
+            box-shadow: 0 0 80px rgba(0,0,0,0.95);
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #1f1f1f;
+            border-right: 1px solid #1f1f1f;
+        }
+
+        @media (min-width: 1024px) {
+            .app-wrapper {
+                max-width: 520px;
+            }
+        }
+
+        /* Hide scrollbars */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .category-pill.active {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            color: #000000 !important;
+            box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45);
+            border-color: #fcd34d;
+            font-weight: 800;
+        }
+
+        .category-pill.active .cat-icon {
+            transform: scale(1.15);
+        }
+
+        .cart-badge-anim {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.4); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Pure Dark Glassmorphism Header */
+        .glass-header {
+            background: rgba(5, 5, 5, 0.96);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        /* Custom Scrollbar for Drawer & Modal */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="selection:bg-amber-400 selection:text-black">
+
+    <div class="app-wrapper pb-32">
+        
+        <!-- TOP STICKY HEADER (PURE JET BLACK & YELLOW) -->
+        <header class="sticky top-0 z-40 glass-header border-b border-[#1c1c1c] transition-all duration-200 pt-2 sm:pt-3">
+            <!-- Brand & Quick Actions (WhatsApp & Call - Icon Only) -->
+            <div class="px-4 pt-4 pb-3 flex items-center justify-between gap-3">
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-display font-black text-xl text-white leading-none tracking-tight uppercase">
+                            THE PIZZA <span class="text-amber-400">MASTER</span>
+                        </h1>
+                        <span id="storeStatusBadge" class="inline-flex items-center gap-1 bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                            Open
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-[#a3a3a3] font-medium mt-1.5 flex items-center gap-1">
+                        <i class="fa-regular fa-clock text-[10px] text-amber-400"></i> 11:30 AM - 2:30 AM • Free Delivery (3km)
+                    </p>
+                </div>
+
+                <!-- Quick Action Buttons: Call & WhatsApp (Icons Only, No Text) -->
+                <div class="flex items-center gap-2 shrink-0">
+                    <!-- Call Button (Icon Only) -->
+                    <a href="tel:03052555528" title="Call The Pizza Master" class="w-9 h-9 rounded-full bg-[#181818] hover:bg-[#262626] border border-[#2e2e2e] text-amber-400 flex items-center justify-center text-sm shadow-md active:scale-95 transition">
+                        <i class="fa-solid fa-phone"></i>
+                    </a>
+                    <!-- WhatsApp Button (Icon Only) -->
+                    <a href="https://wa.me/923052555528" target="_blank" title="WhatsApp Chat" class="w-9 h-9 rounded-full bg-amber-400 hover:bg-amber-300 text-black flex items-center justify-center text-base shadow-md shadow-amber-400/25 active:scale-95 transition">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Search Input Box (Pure Black & Gold Ring) -->
+            <div class="px-4 pb-2.5">
+                <div class="relative flex items-center">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 text-[#737373] text-sm"></i>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="Search dishes (e.g. zinger, regular pizza, wings)..." 
+                        class="w-full bg-[#121212] text-white text-xs font-medium placeholder-[#737373] pl-9 pr-8 py-2.5 rounded-xl border border-[#262626] focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/30 transition shadow-inner"
+                        oninput="handleSearch(this.value)"
+                    >
+                    <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 text-[#737373] hover:text-white">
+                        <i class="fa-solid fa-circle-xmark text-sm"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scrollable Category Filter Pills -->
+            <div class="px-3 pb-2.5 overflow-x-auto no-scrollbar flex items-center gap-2" id="categoryNav">
+                <!-- Dynamically Rendered Category Pills -->
+            </div>
+        </header>
+
+        <!-- STORE INFO BANNER / STATS (PURE BLACK & GOLD ACCENTS) -->
+        <div class="px-4 pt-3 pb-1" id="storeInfoBanner">
+            <div class="bg-[#0f0f0f] rounded-2xl p-3.5 text-white shadow-lg border border-[#222222] relative overflow-hidden">
+                <div class="absolute -right-8 -bottom-8 w-36 h-36 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="relative z-10">
+                    <div class="flex items-start justify-between gap-2 mb-2.5">
+                        <div>
+                            <div class="flex items-center gap-1.5 text-[11px] font-bold text-amber-400 uppercase tracking-wide mb-0.5">
+                                <i class="fa-solid fa-location-dot text-amber-400"></i> Nasheman Iqbal Phase 1, Lahore
+                            </div>
+                            <p class="text-[11px] text-[#d4d4d4]">Near Victoria Store, Khyaban-e-Jinnah Road</p>
+                        </div>
+                        <span class="bg-amber-400/10 border border-amber-400/40 text-amber-300 text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0">
+                            Min Rs. 500
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 pt-2 border-t border-[#222222] text-center text-[10px]">
+                        <div class="bg-[#171717] border border-[#282828] rounded-xl py-1.5 px-1">
+                            <span class="text-amber-400 block font-black text-xs">FREE</span>
+                            <span class="text-[#a3a3a3]">Delivery (3km)</span>
+                        </div>
+                        <div class="bg-[#171717] border border-[#282828] rounded-xl py-1.5 px-1">
+                            <span class="text-amber-400 block font-black text-xs">30-40m</span>
+                            <span class="text-[#a3a3a3]">Fast Delivery</span>
+                        </div>
+                        <div class="bg-[#171717] border border-[#282828] rounded-xl py-1.5 px-1">
+                            <span class="text-emerald-400 block font-black text-xs">WhatsApp</span>
+                            <span class="text-[#a3a3a3]">Instant Order</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HERO HIGHLIGHT CAROUSEL / SPECIAL OFFER (PURE BLACK & GOLD) -->
+        <div class="px-4 py-3" id="heroBanner">
+            <div class="bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 rounded-2xl p-4 text-black relative overflow-hidden shadow-floating flex items-center justify-between border border-amber-300">
+                <div class="relative z-10 max-w-[62%]">
+                    <span class="bg-black text-amber-300 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md inline-block mb-1 shadow-sm">
+                        MEGA SAVER
+                    </span>
+                    <h3 class="font-display text-lg font-black leading-tight text-black drop-shadow-sm">
+                        Family Feast Deal
+                    </h3>
+                    <p class="text-[11px] text-[#1c1c1c] font-semibold mt-0.5 mb-2.5 line-clamp-2">
+                        1 L. Stuffed + 1 L. Special + 10 Wings + Pasta + Sandwich + 2 Drinks!
+                    </p>
+                    <button onclick="openDealModal('family_deal')" class="bg-black hover:bg-[#1a1a1a] text-amber-400 text-xs font-black px-3.5 py-1.5 rounded-xl shadow-md active:scale-95 transition flex items-center gap-1.5">
+                        Order For Rs. 4,850 <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+                <div class="relative z-10 shrink-0 w-28 h-28 -mr-2">
+                    <img 
+                        src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=300&q=80" 
+                        alt="Family Pizza Feast"
+                        class="w-full h-full object-cover rounded-2xl shadow-xl rotate-3 border-2 border-black/40" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80'"
+                    >
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH / CATEGORY STATUS HEADER -->
+        <div id="sectionHeaderBar" class="px-4 pt-2 pb-1 flex items-center justify-between">
+            <h2 class="text-sm font-black text-white font-display flex items-center gap-2" id="currentSectionTitle">
+                All Menu
+            </h2>
+            <span id="currentSectionBadge" class="text-[11px] font-bold text-amber-300 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                All Items
+            </span>
+        </div>
+
+        <!-- MAIN PRODUCTS CONTAINER (PURE BLACK CARDS WITH GOLD ACCENTS) -->
+        <main class="px-4 space-y-6 pt-1" id="menuContainer">
+            <!-- Rendered by JavaScript -->
+        </main>
+
+        <!-- EMPTY SEARCH STATE -->
+        <div id="emptySearchState" class="hidden py-16 text-center px-4">
+            <div class="w-16 h-16 bg-[#121212] text-amber-400 border border-[#242424] rounded-full flex items-center justify-center mx-auto text-2xl mb-3">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h3 class="font-bold text-white text-base">No dishes found</h3>
+            <p class="text-xs text-[#a3a3a3] mt-1 max-w-xs mx-auto">We couldn't find anything matching your search. Try searching for "zinger", "pizza", "wings", "pasta", or "deals".</p>
+            <button onclick="clearSearch()" class="mt-4 bg-amber-400 hover:bg-amber-300 text-black text-xs font-black px-4 py-2 rounded-xl">
+                Show Full Menu
+            </button>
+        </div>
+
+        <!-- FLOATING BOTTOM BASKET BAR (PURE BLACK & GOLD CONTRAST) -->
+        <div id="floatingCartBar" class="fixed bottom-0 left-0 right-0 z-50 flex justify-center p-3 pointer-events-none transition-all duration-300 transform translate-y-24 opacity-0">
+            <div class="w-full max-w-[480px] pointer-events-auto">
+                <button 
+                    onclick="openCartDrawer()" 
+                    class="w-full bg-gradient-to-r from-amber-400 via-amber-300 to-yellow-500 text-black rounded-2xl p-3.5 shadow-floating flex items-center justify-between active:scale-[0.98] transition border border-amber-200"
+                >
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-black text-amber-400 flex items-center justify-center font-black text-sm relative">
+                            <i class="fa-solid fa-bag-shopping text-base"></i>
+                            <span id="floatingCartBadge" class="absolute -top-1 -right-1 bg-white text-black text-[11px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-black shadow-sm">
+                                0
+                            </span>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-[11px] font-bold text-black uppercase tracking-wider block">View Your Basket</span>
+                            <span class="text-base font-black tracking-tight text-black" id="floatingCartTotal">Rs. 0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 font-black text-xs bg-black text-amber-300 px-3.5 py-2 rounded-xl shadow-sm">
+                        <span>Checkout</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ITEM DETAIL / CUSTOMIZATION MODAL (PURE BLACK THEME) -->
+    <div id="itemModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="w-full max-w-[480px] bg-[#0c0c0c] border border-[#242424] rounded-t-[32px] sm:rounded-3xl max-h-[90vh] flex flex-col shadow-modal transform translate-y-full transition-transform duration-300" id="itemModalCard">
+            <!-- Modal Header with Image -->
+            <div class="relative h-48 sm:h-52 w-full shrink-0 bg-[#000000] rounded-t-[32px] sm:rounded-t-3xl overflow-hidden">
+                <img id="modalItemImage" src="" alt="Food Item" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80'">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#0c0c0c] via-black/40 to-transparent"></div>
+                <button onclick="closeItemModal()" class="absolute top-4 right-4 w-9 h-9 bg-black/80 hover:bg-black text-white rounded-full flex items-center justify-center backdrop-blur-md transition border border-[#333333]">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+                <div class="absolute bottom-3 left-4 right-4 text-white">
+                    <span id="modalItemCategoryBadge" class="text-[10px] font-black uppercase bg-amber-400 text-black px-2 py-0.5 rounded-md inline-block mb-1 shadow-sm">
+                        Category
+                    </span>
+                    <h3 id="modalItemTitle" class="font-display font-black text-xl leading-tight text-white drop-shadow-sm">Item Name</h3>
+                    <p id="modalItemDesc" class="text-xs text-[#d4d4d4] line-clamp-2 mt-0.5">Item description goes here</p>
+                </div>
+            </div>
+
+            <!-- Modal Body (Scrollable Options) -->
+            <div class="p-4 overflow-y-auto flex-1 space-y-4 no-scrollbar" id="modalOptionsContainer">
+                <!-- Options rendered dynamically -->
+            </div>
+
+            <!-- Modal Footer (Quantity & Add to Cart) -->
+            <div class="p-4 border-t border-[#1f1f1f] bg-[#050505] rounded-b-[32px] sm:rounded-b-3xl flex items-center justify-between gap-3">
+                <!-- Qty buttons -->
+                <div class="flex items-center bg-[#141414] rounded-xl border border-[#262626] p-1 shadow-sm">
+                    <button onclick="changeModalQty(-1)" class="w-8 h-8 rounded-lg bg-[#222222] hover:bg-[#2c2c2c] text-white flex items-center justify-center text-xs font-bold active:scale-95 transition">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+                    <span id="modalQtyDisplay" class="w-8 text-center font-black text-sm text-amber-400">1</span>
+                    <button onclick="changeModalQty(1)" class="w-8 h-8 rounded-lg bg-amber-400 text-black flex items-center justify-center text-xs font-black active:scale-95 transition">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+
+                <!-- Add Button -->
+                <button id="modalAddToCartBtn" onclick="confirmAddToCart()" class="flex-1 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-black font-black text-xs py-3.5 px-4 rounded-xl shadow-md flex items-center justify-between active:scale-[0.98] transition">
+                    <span>Add To Order</span>
+                    <span id="modalFinalPrice" class="bg-black/20 px-2 py-0.5 rounded-lg text-black font-extrabold">Rs. 0</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CART & CHECKOUT DRAWER (PURE JET BLACK WITH JAZZCASH & EASYPAISA) -->
+    <div id="cartDrawer" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+        <div class="w-full max-w-[480px] bg-[#0c0c0c] border border-[#242424] rounded-t-[32px] sm:rounded-3xl max-h-[92vh] h-full flex flex-col shadow-modal transform translate-y-full transition-transform duration-300" id="cartDrawerCard">
+            <!-- Header -->
+            <div class="px-4 py-3.5 border-b border-[#1f1f1f] flex items-center justify-between bg-[#121212] rounded-t-[32px] sm:rounded-t-3xl">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-400 flex items-center justify-center text-sm">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-black text-base text-white">Your Basket</h3>
+                        <span id="drawerItemCountText" class="text-[11px] text-[#a3a3a3] font-medium">0 items selected</span>
+                    </div>
+                </div>
+                <button onclick="closeCartDrawer()" class="w-8 h-8 rounded-full bg-[#1c1c1c] text-white hover:bg-[#262626] flex items-center justify-center transition border border-[#2c2c2c]">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Content Area (Scrollable) -->
+            <div class="p-4 overflow-y-auto flex-1 space-y-4 no-scrollbar" id="cartContentArea">
+                <!-- Cart Items List -->
+                <div id="cartItemsList" class="space-y-2.5">
+                    <!-- Rendered by JS -->
+                </div>
+
+                <!-- Empty Cart View -->
+                <div id="emptyCartView" class="hidden py-12 text-center">
+                    <div class="w-16 h-16 bg-[#141414] text-amber-400 border border-[#262626] rounded-full flex items-center justify-center mx-auto text-2xl mb-3">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base">Your basket is empty</h4>
+                    <p class="text-xs text-[#a3a3a3] mt-1 max-w-xs mx-auto">Explore the menu and add your favorite pizzas, zinger burgers, or deals!</p>
+                    <button onclick="closeCartDrawer()" class="mt-4 bg-amber-400 text-black text-xs font-black px-5 py-2.5 rounded-xl shadow-md">
+                        Browse Menu
+                    </button>
+                </div>
+
+                <!-- Checkout Form & Details -->
+                <div id="checkoutFormSection" class="pt-2 space-y-3.5 border-t border-[#1f1f1f]">
+                    <!-- Minimum order notice if under 500 -->
+                    <div id="minOrderAlert" class="hidden bg-amber-950/40 border border-amber-500/40 rounded-xl p-3 text-amber-200 text-xs flex items-center gap-2.5">
+                        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-base shrink-0"></i>
+                        <span id="minOrderAlertText">Minimum order is <strong>Rs. 500</strong>. Please add more items to order.</span>
+                    </div>
+
+                    <h4 class="font-display font-bold text-xs uppercase tracking-wider text-amber-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-location-dot text-amber-400"></i> Delivery Address & Payment
+                    </h4>
+
+                    <!-- Delivery Address Input Field -->
+                    <div class="space-y-2.5 text-xs">
+                        <div id="addressFieldContainer">
+                            <label class="block text-amber-300 font-bold mb-1">
+                                Delivery Address & Landmark <span class="text-red-400">*</span>
+                            </label>
+                            <textarea 
+                                id="custAddress" 
+                                rows="3" 
+                                placeholder="House #, Street #, Block / Phase, Landmark (e.g. Near Victoria Store / Nasheman Iqbal Phase 1)" 
+                                class="w-full bg-[#121212] text-white border-2 border-amber-400/40 focus:border-amber-400 rounded-xl px-3 py-2.5 text-xs focus:outline-none placeholder-[#737373] shadow-inner"
+                            ></textarea>
+                        </div>
+
+                        <!-- Special Instructions -->
+                        <div>
+                            <label class="block text-[#d4d4d4] font-semibold mb-1">Special Cooking Instructions (Optional)</label>
+                            <input type="text" id="custNotes" placeholder="e.g. Make it spicy, less sauce, extra napkins" class="w-full bg-[#121212] text-white border border-[#262626] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400">
+                        </div>
+
+                        <!-- Payment Method Selector -->
+                        <div>
+                            <label class="block text-[#d4d4d4] font-semibold mb-1">Select Payment Method</label>
+                            <select id="custPayment" onchange="handlePaymentChange(this.value)" class="w-full bg-[#121212] text-white border border-[#262626] rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-amber-400 font-medium">
+                                <option value="Cash on Delivery">Cash on Delivery (COD)</option>
+                                <option value="JazzCash / EasyPaisa" selected>JazzCash / EasyPaisa (Online Transfer)</option>
+                            </select>
+                        </div>
+
+                        <!-- JAZZCASH & EASYPAISA DETAILS CARD WITH 1-CLICK COPY BUTTON -->
+                        <div id="onlinePaymentCard" class="bg-[#121212] border-2 border-amber-400/40 rounded-2xl p-3.5 space-y-3 shadow-soft">
+                            <div class="flex items-center justify-between border-b border-[#242424] pb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-7 h-7 rounded-lg bg-amber-400 text-black flex items-center justify-center font-black text-xs">
+                                        <i class="fa-solid fa-mobile-screen-button"></i>
+                                    </span>
+                                    <div>
+                                        <h5 class="text-xs font-black text-white">JazzCash & EasyPaisa</h5>
+                                        <span class="text-[10px] text-[#a3a3a3]">Account Title: <strong class="text-white">The Pizza Master</strong></span>
+                                    </div>
+                                </div>
+                                <span class="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded">
+                                    Active
+                                </span>
+                            </div>
+
+                            <!-- Account 1: 0305-2555528 -->
+                            <div class="bg-[#050505] p-2.5 rounded-xl border border-[#262626] flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] text-[#a3a3a3] block font-medium">JazzCash / EasyPaisa Account</span>
+                                    <span class="text-sm font-black text-amber-400 tracking-wider font-mono" id="accNumber1">03052555528</span>
+                                </div>
+                                <button 
+                                    type="button"
+                                    onclick="copyToClipboard('03052555528', 'accBtn1')" 
+                                    id="accBtn1"
+                                    class="bg-amber-400 hover:bg-amber-300 text-black text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>Copy</span>
+                                </button>
+                            </div>
+
+                            <!-- Account 2: 0305-2555529 -->
+                            <div class="bg-[#050505] p-2.5 rounded-xl border border-[#262626] flex items-center justify-between">
+                                <div>
+                                    <span class="text-[10px] text-[#a3a3a3] block font-medium">Secondary JazzCash / EasyPaisa</span>
+                                    <span class="text-sm font-black text-amber-400 tracking-wider font-mono" id="accNumber2">03052555529</span>
+                                </div>
+                                <button 
+                                    type="button"
+                                    onclick="copyToClipboard('03052555529', 'accBtn2')" 
+                                    id="accBtn2"
+                                    class="bg-amber-400 hover:bg-amber-300 text-black text-xs font-black px-3 py-1.5 rounded-lg flex items-center gap-1.5 active:scale-95 transition shadow-sm"
+                                >
+                                    <i class="fa-regular fa-copy"></i>
+                                    <span>Copy</span>
+                                </button>
+                            </div>
+
+                            <p class="text-[10px] text-[#a3a3a3] italic text-center">
+                                * Transfer payment & share screenshot on WhatsApp after clicking Order below.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Bill Summary -->
+                    <div class="bg-[#121212] rounded-2xl p-3.5 space-y-2 border border-[#242424] text-xs">
+                        <div class="flex justify-between text-[#d4d4d4]">
+                            <span>Subtotal</span>
+                            <span class="font-bold text-white" id="billSubtotal">Rs. 0</span>
+                        </div>
+                        <div class="flex justify-between text-[#d4d4d4]">
+                            <span class="flex items-center gap-1">
+                                Delivery Charges <span class="text-[10px] text-amber-400 font-bold bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.2 rounded">Within 3km</span>
+                            </span>
+                            <span class="font-bold text-emerald-400">FREE</span>
+                        </div>
+                        <div class="pt-2 border-t border-[#222222] flex justify-between items-center">
+                            <div>
+                                <span class="font-black text-white text-sm block">Total Bill</span>
+                                <span class="text-[10px] text-[#a3a3a3]">Tax included</span>
+                            </div>
+                            <span class="font-black text-amber-400 text-lg font-display" id="billTotal">Rs. 0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Drawer Footer Buttons -->
+            <div class="p-4 border-t border-[#1f1f1f] bg-[#050505] rounded-b-[32px] sm:rounded-b-3xl" id="drawerFooterActions">
+                <button 
+                    onclick="submitOrderToWhatsApp()" 
+                    id="submitWhatsappBtn"
+                    class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black text-sm py-4 px-4 rounded-xl shadow-lg shadow-emerald-600/30 flex items-center justify-center gap-2 active:scale-[0.98] transition"
+                >
+                    <i class="fa-brands fa-whatsapp text-xl"></i>
+                    <span>Send Order via WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ORDER SUCCESS MODAL -->
+    <div id="successModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 p-4">
+        <div class="w-full max-w-sm bg-[#0e0e0e] border border-[#242424] rounded-3xl p-6 text-center shadow-modal transform scale-95 transition-all duration-300" id="successModalCard">
+            <div class="w-16 h-16 bg-amber-400/20 border border-amber-400 text-amber-400 rounded-full flex items-center justify-center text-3xl mx-auto mb-3 shadow-inner">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <h3 class="font-display font-black text-xl text-white">Order Sent!</h3>
+            <p class="text-xs text-[#d4d4d4] mt-1 mb-4">Your order details were formatted and opened in WhatsApp chat for the manager to prepare immediately.</p>
+            
+            <div class="bg-[#141414] rounded-2xl p-3 text-left text-xs mb-4 border border-[#262626] font-mono space-y-1 text-white" id="receiptPreviewBox">
+                <!-- Preview summary -->
+            </div>
+
+            <button onclick="closeSuccessModal()" class="w-full bg-amber-400 hover:bg-amber-300 text-black text-xs font-black py-3 rounded-xl shadow-md">
+                Done & Continue Browsing
+            </button>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed top-5 left-1/2 -translate-x-1/2 z-50 bg-amber-400 text-black text-xs font-black px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2 transform -translate-y-16 opacity-0 transition-all duration-300 pointer-events-none border border-amber-200">
+        <i class="fa-solid fa-circle-check text-black"></i>
+        <span id="toastMsg">Added to basket!</span>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // --- 1. PRODUCT DATABASE ---
+        const MENU_DATA = {
+            categories: [
+                { id: 'all', name: 'All Menu', badge: 'Full Menu' },
+                { id: 'pizzas', name: 'Pizzas', badge: 'Reg / Sp / Stuffer' },
+                { id: 'fried', name: 'Burgers & Fried', badge: 'Zinger & Wings' },
+                { id: 'deals', name: 'Deals', badge: '17 Deals' },
+                { id: 'rolls', name: 'Rolls & Sandwiches', badge: 'Chef Choice' },
+                { id: 'wings', name: 'Baked Wings', badge: '10 Pcs' },
+                { id: 'pastas', name: 'Baked Pastas', badge: 'Creamy' },
+                { id: 'drinks', name: 'Drinks & Extras', badge: 'Cold' }
+            ],
+            
+            items: [
+                // PIZZAS SECTION
+                {
+                    id: 'family_pizza_xl',
+                    category: 'pizzas',
+                    name: 'Family Pizza XL (Free 1.5L Drink)',
+                    desc: 'Huge 16-Inch Family Pizza served with FREE 1.5 Liter Cold Drink',
+                    price: 1850,
+                    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'pizza_custom',
+                    sizes: [
+                        { name: 'Family XL Regular Flavors', price: 1850 },
+                        { name: 'Family XL Special Flavors', price: 2000 }
+                    ],
+                    flavors: ['Tikka', 'Fajita', 'Supreme', 'Master Special', 'Peri Peri', 'Malai Boti', 'Mughalai']
+                },
+                {
+                    id: 'pizza_regular',
+                    category: 'pizzas',
+                    name: 'Regular Pizza Range',
+                    desc: 'Italian Pizza, Cheese Lover, EURO, Tikka, Fajita, Supreme',
+                    price: 500,
+                    image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'pizza_custom',
+                    sizes: [
+                        { name: 'Small (7-inch)', price: 500 },
+                        { name: 'Medium (10-inch)', price: 950 },
+                        { name: 'Large (13-inch)', price: 1300 }
+                    ],
+                    flavors: ['Chicken Tikka', 'Chicken Fajita', 'Cheese Lover', 'Italian Pizza', 'EURO Pizza', 'Supreme Classic']
+                },
+                {
+                    id: 'pizza_special',
+                    category: 'pizzas',
+                    name: 'Special Pizza Range',
+                    desc: 'Master Special, Peri Peri, Bone Fire, Malai Boti, Mughalai Pizza',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'pizza_custom',
+                    sizes: [
+                        { name: 'Small (7-inch)', price: 550 },
+                        { name: 'Medium (10-inch)', price: 1000 },
+                        { name: 'Large (13-inch)', price: 1350 }
+                    ],
+                    flavors: ['Master Special', 'Peri Peri Spicy', 'Bone Fire Smokey', 'Malai Boti Creamy', 'Mughalai Royal']
+                },
+                {
+                    id: 'pizza_stuffer',
+                    category: 'pizzas',
+                    name: 'Stuffer Pizza Range',
+                    desc: 'Behari Kabab, Chicken/Cheese Stuffer, Crown Crust, Kabab Stuffer, Lazania Pizza',
+                    price: 1250,
+                    image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'pizza_custom',
+                    sizes: [
+                        { name: 'Medium Stuffer Crust (10-inch)', price: 1250 },
+                        { name: 'Large Stuffer Crust (13-inch)', price: 1600 }
+                    ],
+                    flavors: ['Chicken Stuffer', 'Cheese Stuffer', 'Behari Kabab Stuffer', 'Crown Crust Stuffer', 'Kabab Stuffer', 'Lazania Pizza']
+                },
+
+                // FRIED CORNER & BURGERS
+                {
+                    id: 'burger_zinger',
+                    category: 'fried',
+                    name: 'Crispy Zinger Burger',
+                    desc: 'Golden crispy chicken breast with signature mayo & iceberg in toasted sesame bun',
+                    price: 350,
+                    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'burger_zinger_cheese',
+                    category: 'fried',
+                    name: 'Zinger Cheese Burger',
+                    desc: 'Crispy zinger chicken loaded with premium melted cheese slice',
+                    price: 400,
+                    image: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'burger_petty',
+                    category: 'fried',
+                    name: 'Chicken Petty Burger',
+                    desc: 'Juicy spiced chicken patty burger with fresh dressings',
+                    price: 250,
+                    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'burger_petty_cheese',
+                    category: 'fried',
+                    name: 'Petty Cheese Burger',
+                    desc: 'Classic chicken patty burger with melted cheddar cheese slice',
+                    price: 300,
+                    image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'hot_wings_10',
+                    category: 'fried',
+                    name: 'Fried Hot Wings (10 Pcs)',
+                    desc: '10 Pieces crunchy fried hot spicy chicken wings',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1527477321055-43615b6294a5?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'nuggets_10',
+                    category: 'fried',
+                    name: 'Chicken Nuggets (10 Pcs)',
+                    desc: '10 Pieces tender crispy golden chicken nuggets',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'fries_small',
+                    category: 'fried',
+                    name: 'Crispy Fries (Small)',
+                    desc: 'Hot salted golden french fries',
+                    price: 200,
+                    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'fries_mayo_small',
+                    category: 'fried',
+                    name: 'Mayo Fries (Small)',
+                    desc: 'Golden french fries smothered in creamy garlic mayo dressing',
+                    price: 250,
+                    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'fries_large',
+                    category: 'fried',
+                    name: 'Crispy Fries (Large)',
+                    desc: 'Jumbo portion of hot salted crispy french fries',
+                    price: 250,
+                    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'fries_mayo_large',
+                    category: 'fried',
+                    name: 'Mayo Fries (Large)',
+                    desc: 'Jumbo loaded french fries with premium garlic mayo dressing',
+                    price: 300,
+                    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+
+                // DEALS SECTION
+                {
+                    id: 'deal_platter',
+                    category: 'deals',
+                    name: 'Platter Deal',
+                    desc: 'Oven Baked Wings 5Pcs, Spin Roll 4Pcs, 1 Small Fries, 500ml Drink',
+                    price: 1100,
+                    image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_1',
+                    category: 'deals',
+                    name: 'Deal 1',
+                    desc: '1 Small Pizza Special, 1 Creamy Pasta, 500 ml Drink',
+                    price: 1100,
+                    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_2',
+                    category: 'deals',
+                    name: 'Deal 2',
+                    desc: '1 Medium Pizza, 1 Large Fries, 1 Liter Drink',
+                    price: 1250,
+                    image: 'https://images.unsplash.com/photo-1590947132387-155cc02f3212?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_3',
+                    category: 'deals',
+                    name: 'Deal 3',
+                    desc: '1 Large Pizza Special, 1 Small Pizza, 1.5 Liter Drink',
+                    price: 1800,
+                    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'variant',
+                    variants: [
+                        { name: 'Regular Pizza Option', price: 1800 },
+                        { name: 'Special Pizza Option', price: 1850 }
+                    ]
+                },
+                {
+                    id: 'deal_4',
+                    category: 'deals',
+                    name: 'Deal 4',
+                    desc: '1 Large Pizza Special, 2 Zinger Burger, 2 Petty Burger, 1.5 Liter Drink',
+                    price: 2550,
+                    image: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_5',
+                    category: 'deals',
+                    name: 'Deal 5',
+                    desc: '3 Zinger Burger, 1 Small Fries, 1 Liter Drink',
+                    price: 1250,
+                    image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_6',
+                    category: 'deals',
+                    name: 'Deal 6',
+                    desc: '1 Large Pizza, 5 Pcs Hot Wings, 1 Liter Drink',
+                    price: 1620,
+                    image: 'https://images.unsplash.com/photo-1527477321055-43615b6294a5?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_7',
+                    category: 'deals',
+                    name: 'Deal 7',
+                    desc: '2 Large Pizzas, 1.5 Liter Drink',
+                    price: 2600,
+                    image: 'https://images.unsplash.com/photo-1544982503-9f984c14501a?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'variant',
+                    variants: [
+                        { name: '2 Large Regular Pizzas', price: 2600 },
+                        { name: '2 Large Special Pizzas', price: 2700 }
+                    ]
+                },
+                {
+                    id: 'deal_8',
+                    category: 'deals',
+                    name: 'Deal 8',
+                    desc: '2 Medium Pizzas, 1 Liter Drink',
+                    price: 1900,
+                    image: 'https://images.unsplash.com/photo-1571407970349-bc81e7e96d47?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'variant',
+                    variants: [
+                        { name: '2 Medium Regular Pizzas', price: 1900 },
+                        { name: '2 Medium Special Pizzas', price: 2000 }
+                    ]
+                },
+                {
+                    id: 'deal_9',
+                    category: 'deals',
+                    name: 'Deal 9',
+                    desc: '4 Zinger Burgers, 2 Small Fries, 1 Liter Drink',
+                    price: 1800,
+                    image: 'https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_10',
+                    category: 'deals',
+                    name: 'Deal 10',
+                    desc: '4 Small Pizzas, 1 Liter Drink',
+                    price: 2000,
+                    image: 'https://images.unsplash.com/photo-1534308983496-4fabb1a015ee?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_11',
+                    category: 'deals',
+                    name: 'Deal 11',
+                    desc: '1 Large Special Pizza, 1 Spin Roll, 1 Liter Drink',
+                    price: 1950,
+                    image: 'https://images.unsplash.com/photo-1588315029754-2dd089d39a1a?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_12',
+                    category: 'deals',
+                    name: 'Deal 12',
+                    desc: '1 Large Regular, 1 Medium Special, 10 Hotwings, 1.5 Liter Drink',
+                    price: 2800,
+                    image: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_13',
+                    category: 'deals',
+                    name: 'Deal 13',
+                    desc: '1 Large Pizza, 1 Medium Pizza, 1.5 Liter Drink',
+                    price: 2250,
+                    image: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'variant',
+                    variants: [
+                        { name: 'Regular Combo (1L + 1M)', price: 2250 },
+                        { name: 'Special Combo (1L + 1M)', price: 2350 }
+                    ]
+                },
+                {
+                    id: 'deal_14',
+                    category: 'deals',
+                    name: 'Deal 14',
+                    desc: '2 Large Stuffed Crust Pizzas, 1.5 Liter Drink',
+                    price: 3200,
+                    image: 'https://images.unsplash.com/photo-1593560708920-61dd98c46a4e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_15',
+                    category: 'deals',
+                    name: 'Deal 15',
+                    desc: '1 Large Stuffed Pizza, 1 Large Special Pizza, 1.5 Liter Drink',
+                    price: 2950,
+                    image: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'deal_16',
+                    category: 'deals',
+                    name: 'Deal 16',
+                    desc: '1 Large Stuffed Pizza, 1 Large Regular Pizza, 1.5 Liter Drink',
+                    price: 2900,
+                    image: 'https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'family_deal',
+                    category: 'deals',
+                    name: 'Family Deal Special',
+                    desc: '1 Large Stuffed, 1 Large Special, 10 Pcs Hot Wings, 1 Creamy Pasta, 1 Pizza Sandwich, 2x 1.5 Liter Drinks',
+                    price: 4850,
+                    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+
+                // ROLLS & SANDWICHES
+                {
+                    id: 'spin_roll',
+                    category: 'rolls',
+                    name: 'Spin Roll',
+                    desc: 'Signature master rolled crust stuffed with spiced chicken and cheese',
+                    price: 650,
+                    image: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'chilli_milli_roll',
+                    category: 'rolls',
+                    name: 'Chilli Milli Roll',
+                    desc: 'Spicy tangy chicken roll packed with zesty sauces and peppers',
+                    price: 650,
+                    image: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'mexican_sandwich',
+                    category: 'rolls',
+                    name: 'Mexican Sandwich',
+                    desc: 'Grilled Mexican style chicken, jalapeños, onions, salsa and cheese',
+                    price: 650,
+                    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'chicken_cheese_stick',
+                    category: 'rolls',
+                    name: 'Chicken Cheese Stick',
+                    desc: 'Baked cheesy chicken stuffed bread sticks',
+                    price: 650,
+                    image: 'https://images.unsplash.com/photo-1541745537411-b8046dc6d66c?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'euro_sandwich',
+                    category: 'rolls',
+                    name: 'Euro Sandwich',
+                    desc: 'Continental European style savory chicken & herb sandwich',
+                    price: 650,
+                    image: 'https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'pizza_sandwich',
+                    category: 'rolls',
+                    name: 'Pizza Sandwich',
+                    desc: 'Toasted oven baked pizza bread sandwich loaded with pizza sauce, chicken & mozzarella',
+                    price: 700,
+                    image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+
+                // OVEN BAKED WINGS
+                {
+                    id: 'wings_peri_peri',
+                    category: 'wings',
+                    name: 'Peri Peri Wings (10 Pcs)',
+                    desc: '10 Pcs tender oven-baked wings tossed in spicy flame Peri Peri marinade',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'wings_baked_dip',
+                    category: 'wings',
+                    name: 'Oven Baked Wings + Dip Sauce (10 Pcs)',
+                    desc: '10 Pcs perfectly baked wings served with house special secret dip sauce',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1527477321055-43615b6294a5?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'wings_honey',
+                    category: 'wings',
+                    name: 'Honey Wings (10 Pcs)',
+                    desc: '10 Pcs sweet & smoky glazed honey barbecue oven baked wings',
+                    price: 550,
+                    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+
+                // OVEN BAKED PASTAS
+                {
+                    id: 'pasta_creamy',
+                    category: 'pastas',
+                    name: 'Creamy White Pasta',
+                    desc: 'Rich Alfredo white creamy pasta with seasoned chicken chunks and melted cheese top',
+                    price: 600,
+                    image: 'https://images.unsplash.com/photo-1621996346565-e3adc644d9fa?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'pasta_flaming',
+                    category: 'pastas',
+                    name: 'Flaming Spicy Pasta',
+                    desc: 'Fiery red sauce pasta infused with hot herbs, chicken, and jalapeños',
+                    price: 600,
+                    image: 'https://images.unsplash.com/photo-1551183053-bf91a1d81141?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'pasta_crunchy',
+                    category: 'pastas',
+                    name: 'Crunchy Pasta Special',
+                    desc: 'Baked pasta topped with golden crispy crunchy chicken bites and herbs',
+                    price: 700,
+                    image: 'https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'pasta_macroni',
+                    category: 'pastas',
+                    name: 'Macaroni Pasta',
+                    desc: 'Classic oven baked spiced macaroni loaded with chicken and vegetables',
+                    price: 600,
+                    image: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'extra_dip_sauce',
+                    category: 'pastas',
+                    name: 'Master Dip Sauce',
+                    desc: 'Secret recipe garlic herb dipping sauce',
+                    price: 50,
+                    image: 'https://images.unsplash.com/photo-1572449043416-55f4685c9bb7?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+
+                // DRINKS & EXTRAS
+                {
+                    id: 'drink_500ml',
+                    category: 'drinks',
+                    name: 'Cold Drink 500ml',
+                    desc: 'Chilled 500ml bottle (Pepsi / 7Up / Mirinda / Dew)',
+                    price: 120,
+                    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'drink_1ltr',
+                    category: 'drinks',
+                    name: 'Cold Drink 1 Liter',
+                    desc: 'Chilled 1.0L bottle (Pepsi / 7Up / Mirinda / Dew)',
+                    price: 150,
+                    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'drink_1_5ltr',
+                    category: 'drinks',
+                    name: 'Cold Drink 1.5 Liter',
+                    desc: 'Chilled 1.5L jumbo bottle (Pepsi / 7Up / Mirinda / Dew)',
+                    price: 200,
+                    image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?auto=format&fit=crop&w=400&q=80',
+                    isPopular: true,
+                    type: 'fixed'
+                },
+                {
+                    id: 'drink_tin',
+                    category: 'drinks',
+                    name: 'Cold Drink Tin Pack',
+                    desc: '250ml Can (Pepsi / 7Up / Mirinda / Dew)',
+                    price: 100,
+                    image: 'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'water_small',
+                    category: 'drinks',
+                    name: 'Mineral Water 500ml (Small)',
+                    desc: 'Pure sealed 500ml mineral water bottle',
+                    price: 60,
+                    image: 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'water_large',
+                    category: 'drinks',
+                    name: 'Mineral Water 1.5 Liter (Large)',
+                    desc: 'Pure sealed 1.5L mineral water bottle',
+                    price: 100,
+                    image: 'https://images.unsplash.com/photo-1548839140-29a749e1bc4e?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'fixed'
+                },
+                {
+                    id: 'extra_topping',
+                    category: 'drinks',
+                    name: 'Extra Cheese & Topping Addon',
+                    desc: 'Additional mozzarella cheese and chicken topping for pizza',
+                    price: 70,
+                    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80',
+                    isPopular: false,
+                    type: 'variant',
+                    variants: [
+                        { name: 'Small Pizza Topping', price: 70 },
+                        { name: 'Medium Pizza Topping', price: 120 },
+                        { name: 'Large Pizza Topping', price: 180 },
+                        { name: 'Family XL Pizza Topping', price: 220 }
+                    ]
+                }
+            ]
+        };
+
+        // --- 2. APPLICATION STATE ---
+        let cart = [];
+        let currentModalItem = null;
+        let currentModalQty = 1;
+        let currentModalSelectedOption = null;
+        let currentModalSelectedFlavor = null;
+        let currentModalSelectedAddons = [];
+        let selectedCategory = 'all';
+        let currentSearchQuery = '';
+
+        // Load cart from LocalStorage if available
+        try {
+            const savedCart = localStorage.getItem('the_pizza_master_cart');
+            if (savedCart) {
+                cart = JSON.parse(savedCart);
+            }
+        } catch (e) {
+            console.error('LocalStorage error', e);
+        }
+
+                // --- 3. INITIALIZATION ---
+        window.addEventListener('DOMContentLoaded', () => {
+            updateStoreStatus();
+            setInterval(updateStoreStatus, 30000); // Check every 30 seconds
+            renderCategoryNav();
+            renderFilteredMenu();
+            updateCartUI();
+        });
+
+        // Dynamic Store Open / Close Status based on current time (11:30 AM to 2:30 AM)
+        function updateStoreStatus() {
+            const badge = document.getElementById('storeStatusBadge');
+            if (!badge) return;
+
+            const now = new Date();
+            const currentMins = now.getHours() * 60 + now.getMinutes();
+
+            // 11:30 AM = 690 mins, 2:30 AM = 150 mins
+            const isOpen = currentMins >= 690 || currentMins <= 150;
+
+            if (isOpen) {
+                badge.className = "inline-flex items-center gap-1 bg-emerald-950/90 border border-emerald-500/50 text-emerald-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Open`;
+            } else {
+                badge.className = "inline-flex items-center gap-1 bg-rose-950/90 border border-rose-500/50 text-rose-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full";
+                badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span> Closed • Opens 11:30 AM`;
+            }
+        }
+
+        // Save Cart to storage
+        function saveCart() {
+            try {
+                localStorage.setItem('the_pizza_master_cart', JSON.stringify(cart));
+            } catch (e) {}
+            updateCartUI();
+        }
+
+        // --- 4. RENDER CATEGORY PILLS (TEXT ONLY & AUTO SCROLL ALWAYS) ---
+        function renderCategoryNav() {
+            const nav = document.getElementById('categoryNav');
+            nav.innerHTML = MENU_DATA.categories.map(cat => `
+                <button 
+                    onclick="selectCategoryFilter('${cat.id}')" 
+                    id="catBtn_${cat.id}" 
+                    class="category-pill ${selectedCategory === cat.id ? 'active' : ''} shrink-0 bg-[#121212] border border-[#242424] text-[#e5e5e5] text-xs font-bold py-2 px-4 rounded-full transition duration-200 shadow-sm whitespace-nowrap active:scale-95"
+                >
+                    <span>${cat.name}</span>
+                </button>
+            `).join('');
+            startNavbarAutoScroll();
+        }
+
+        // Auto Scroll Always for Navbar
+        let navAutoScrollRaf = null;
+        let navScrollDirection = 1;
+        let isNavPaused = false;
+        let navResumeTimeout = null;
+
+        function startNavbarAutoScroll() {
+            const nav = document.getElementById('categoryNav');
+            if (!nav) return;
+
+            function autoScrollStep() {
+                if (!isNavPaused) {
+                    const maxScroll = nav.scrollWidth - nav.clientWidth;
+                    if (maxScroll > 2) {
+                        nav.scrollLeft += 0.65 * navScrollDirection;
+                        if (nav.scrollLeft >= maxScroll - 1) {
+                            navScrollDirection = -1;
+                        } else if (nav.scrollLeft <= 1) {
+                            navScrollDirection = 1;
+                        }
+                    }
+                }
+                navAutoScrollRaf = requestAnimationFrame(autoScrollStep);
+            }
+
+            if (navAutoScrollRaf) cancelAnimationFrame(navAutoScrollRaf);
+            navAutoScrollRaf = requestAnimationFrame(autoScrollStep);
+
+            function pauseTemporarily() {
+                isNavPaused = true;
+                if (navResumeTimeout) clearTimeout(navResumeTimeout);
+                navResumeTimeout = setTimeout(() => {
+                    isNavPaused = false;
+                }, 2000);
+            }
+
+            nav.onmouseenter = () => { isNavPaused = true; };
+            nav.onmouseleave = () => { isNavPaused = false; };
+            nav.ontouchstart = () => { isNavPaused = true; };
+            nav.ontouchend = pauseTemporarily;
+            nav.onwheel = pauseTemporarily;
+        }
+
+        // Category Filter Selection
+        function selectCategoryFilter(categoryId) {
+            selectedCategory = categoryId;
+            currentSearchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+
+            document.querySelectorAll('.category-pill').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`catBtn_${categoryId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            }
+
+            renderFilteredMenu();
+
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // --- 5. RENDER MENU ITEMS ---
+        function renderFilteredMenu() {
+            const container = document.getElementById('menuContainer');
+            const emptySearchState = document.getElementById('emptySearchState');
+            const heroBanner = document.getElementById('heroBanner');
+            const sectionHeaderBar = document.getElementById('sectionHeaderBar');
+            const currentSectionTitle = document.getElementById('currentSectionTitle');
+            const currentSectionBadge = document.getElementById('currentSectionBadge');
+
+            const query = currentSearchQuery.trim().toLowerCase();
+
+            // 1. If Searching:
+            if (query.length > 0) {
+                heroBanner.classList.add('hidden');
+                sectionHeaderBar.classList.remove('hidden');
+
+                const matchedItems = MENU_DATA.items.filter(item => {
+                    if (item.category === 'deals') {
+                        const isLookingForDeals = query.includes('deal') || query.includes('platter') || query.includes('family') || query.includes('combo');
+                        return isLookingForDeals && item.name.toLowerCase().includes(query);
+                    } else {
+                        const nameMatches = item.name.toLowerCase().includes(query);
+                        const categoryMatches = item.category.toLowerCase().includes(query);
+                        const flavorMatches = item.flavors && item.flavors.some(f => f.toLowerCase().includes(query));
+                        return nameMatches || categoryMatches || flavorMatches;
+                    }
+                });
+
+                currentSectionTitle.innerText = "Search Results";
+                currentSectionBadge.innerText = `${matchedItems.length} found`;
+
+                if (matchedItems.length === 0) {
+                    container.innerHTML = '';
+                    emptySearchState.classList.remove('hidden');
+                } else {
+                    emptySearchState.classList.add('hidden');
+                    container.innerHTML = `
+                        <div class="grid grid-cols-1 gap-3.5">
+                            ${matchedItems.map(item => renderItemCard(item)).join('')}
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            // 2. Category Selected Mode
+            emptySearchState.classList.add('hidden');
+
+            if (selectedCategory === 'all') {
+                heroBanner.classList.remove('hidden');
+                currentSectionTitle.innerText = "All Menu";
+                currentSectionBadge.innerText = `All Sections`;
+
+                let html = '';
+                MENU_DATA.categories.filter(c => c.id !== 'all').forEach(cat => {
+                    const catItems = MENU_DATA.items.filter(i => i.category === cat.id);
+                    if (catItems.length > 0) {
+                        html += `
+                            <section class="category-section pt-1">
+                                <div class="flex items-center justify-between mb-3 border-b border-[#1c1c1c] pb-1.5">
+                                    <div class="flex items-center gap-2">
+                                        
+                                        <h2 class="font-display font-black text-base text-white tracking-tight">${cat.name}</h2>
+                                    </div>
+                                    <span class="text-[11px] font-bold text-amber-300 bg-amber-400/10 px-2.5 py-0.5 rounded-full border border-amber-400/30">
+                                        ${cat.badge}
+                                    </span>
+                                </div>
+                                <div class="grid grid-cols-1 gap-3">
+                                    ${catItems.map(item => renderItemCard(item)).join('')}
+                                </div>
+                            </section>
+                        `;
+                    }
+                });
+                container.innerHTML = html;
+            } else {
+                const activeCatObj = MENU_DATA.categories.find(c => c.id === selectedCategory);
+                const catItems = MENU_DATA.items.filter(i => i.category === selectedCategory);
+
+                if (selectedCategory === 'deals') {
+                    heroBanner.classList.remove('hidden');
+                } else {
+                    heroBanner.classList.add('hidden');
+                }
+
+                currentSectionTitle.innerText = activeCatObj.name;
+                currentSectionBadge.innerText = `${catItems.length} items`;
+
+                container.innerHTML = `
+                    <section class="category-section pt-1">
+                        <div class="grid grid-cols-1 gap-3">
+                            ${catItems.map(item => renderItemCard(item)).join('')}
+                        </div>
+                    </section>
+                `;
+            }
+        }
+
+        // Render Single Item Card (Pure Jet Black & Yellow Card)
+        function renderItemCard(item) {
+            const isCustomizable = item.type !== 'fixed';
+            const priceLabel = item.type === 'pizza_custom' || item.type === 'variant' 
+                ? `From Rs. ${item.price}` 
+                : `Rs. ${item.price}`;
+
+            return `
+                <div class="bg-[#101010] rounded-2xl p-3 shadow-soft border border-[#202020] flex gap-3 relative hover:border-amber-400/40 transition duration-200 group">
+                    
+                    <!-- Text Info Column -->
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                                ${item.isPopular ? `
+                                    <span class="bg-amber-400 text-black text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-0.5 shadow-sm">
+                                        <i class="fa-solid fa-fire text-[8px]"></i> Popular
+                                    </span>
+                                ` : ''}
+                                ${isCustomizable ? `
+                                    <span class="bg-[#1a1a1a] text-amber-300 border border-amber-400/30 text-[9px] font-bold px-1.5 py-0.5 rounded">
+                                        Options
+                                    </span>
+                                ` : ''}
+                            </div>
+                            <h3 class="font-display font-bold text-sm text-white leading-tight group-hover:text-amber-400 transition">
+                                ${item.name}
+                            </h3>
+                            <p class="text-[11px] text-[#a3a3a3] line-clamp-2 mt-1 leading-snug">
+                                ${item.desc}
+                            </p>
+                        </div>
+
+                        <div class="mt-3 flex items-center justify-between">
+                            <span class="font-black text-sm text-amber-400 font-display tracking-tight">
+                                ${priceLabel}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Image & Add Button Column -->
+                    <div class="relative w-28 h-28 shrink-0 rounded-xl overflow-hidden bg-[#050505] border border-[#222222]">
+                        <img 
+                            src="${item.image}" 
+                            alt="${item.name}" 
+                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                            loading="lazy"
+                            onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=400&q=80'"
+                        >
+                        <!-- Add Button -->
+                        <button 
+                            onclick="handleItemClick('${item.id}')" 
+                            class="absolute bottom-1.5 right-1.5 bg-amber-400 hover:bg-amber-300 text-black w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black shadow-md active:scale-90 transition shadow-amber-500/30"
+                            title="Add item"
+                        >
+                            <i class="fa-solid fa-plus font-black"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // --- 6. SEARCH HANDLER ---
+        function handleSearch(val) {
+            currentSearchQuery = val;
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (val.trim().length > 0) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+            renderFilteredMenu();
+        }
+
+        function clearSearch() {
+            currentSearchQuery = '';
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            document.getElementById('clearSearchBtn').classList.add('hidden');
+            renderFilteredMenu();
+        }
+
+        // --- 7. ITEM INTERACTION & CUSTOMIZATION MODAL ---
+        function handleItemClick(itemId) {
+            const item = MENU_DATA.items.find(i => i.id === itemId);
+            if (!item) return;
+
+            if (item.type === 'fixed') {
+                addToCartQuick(item);
+            } else {
+                openCustomModal(item);
+            }
+        }
+
+        function addToCartQuick(item) {
+            const cartItem = {
+                id: item.id + '_' + Date.now(),
+                baseId: item.id,
+                name: item.name,
+                price: item.price,
+                qty: 1,
+                option: null,
+                flavor: null,
+                desc: item.desc
+            };
+
+            cart.push(cartItem);
+            saveCart();
+            showToast(`Added "${item.name}" to basket!`);
+        }
+
+        function openDealModal(dealId) {
+            const item = MENU_DATA.items.find(i => i.id === dealId);
+            if (item) {
+                openCustomModal(item);
+            }
+        }
+
+        function openCustomModal(item) {
+            currentModalItem = item;
+            currentModalQty = 1;
+            currentModalSelectedAddons = [];
+
+            document.getElementById('modalItemImage').src = item.image;
+            document.getElementById('modalItemTitle').innerText = item.name;
+            document.getElementById('modalItemDesc').innerText = item.desc;
+            document.getElementById('modalItemCategoryBadge').innerText = item.category.toUpperCase();
+            document.getElementById('modalQtyDisplay').innerText = '1';
+
+            const optionsContainer = document.getElementById('modalOptionsContainer');
+            let optionsHtml = '';
+
+            // Handle Size / Option choices
+            if (item.sizes && item.sizes.length > 0) {
+                currentModalSelectedOption = item.sizes[0];
+                optionsHtml += `
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400">
+                            1. Select Pizza Size & Crust <span class="text-red-400">*</span>
+                        </label>
+                        <div class="space-y-1.5">
+                            ${item.sizes.map((s, idx) => `
+                                <label class="flex items-center justify-between p-3 rounded-xl border border-[#242424] bg-[#121212] cursor-pointer hover:border-amber-400 has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10 transition">
+                                    <div class="flex items-center gap-2.5">
+                                        <input type="radio" name="modal_size" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateModalOptionSize(${idx})" class="text-amber-400 focus:ring-amber-400 h-4 w-4 bg-black border-[#333333]">
+                                        <span class="text-xs font-bold text-white">${s.name}</span>
+                                    </div>
+                                    <span class="text-xs font-extrabold text-amber-400">Rs. ${s.price}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else if (item.variants && item.variants.length > 0) {
+                currentModalSelectedOption = item.variants[0];
+                optionsHtml += `
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400">
+                            1. Choose Variant Option <span class="text-red-400">*</span>
+                        </label>
+                        <div class="space-y-1.5">
+                            ${item.variants.map((v, idx) => `
+                                <label class="flex items-center justify-between p-3 rounded-xl border border-[#242424] bg-[#121212] cursor-pointer hover:border-amber-400 has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10 transition">
+                                    <div class="flex items-center gap-2.5">
+                                        <input type="radio" name="modal_variant" value="${idx}" ${idx === 0 ? 'checked' : ''} onchange="updateModalOptionVariant(${idx})" class="text-amber-400 focus:ring-amber-400 h-4 w-4 bg-black border-[#333333]">
+                                        <span class="text-xs font-bold text-white">${v.name}</span>
+                                    </div>
+                                    <span class="text-xs font-extrabold text-amber-400">Rs. ${v.price}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                currentModalSelectedOption = { name: 'Standard', price: item.price };
+            }
+
+            // Handle Flavors
+            if (item.flavors && item.flavors.length > 0) {
+                currentModalSelectedFlavor = item.flavors[0];
+                optionsHtml += `
+                    <div class="space-y-2 pt-2 border-t border-[#1f1f1f]">
+                        <label class="block text-xs font-bold uppercase tracking-wider text-amber-400">
+                            2. Choose Pizza Flavor <span class="text-red-400">*</span>
+                        </label>
+                        <div class="grid grid-cols-2 gap-2">
+                            ${item.flavors.map((f, idx) => `
+                                <label class="flex items-center gap-2 p-2.5 rounded-xl border border-[#242424] bg-[#121212] cursor-pointer hover:border-amber-400 has-[:checked]:border-amber-400 has-[:checked]:bg-amber-400/10 transition">
+                                    <input type="radio" name="modal_flavor" value="${f}" ${idx === 0 ? 'checked' : ''} onchange="updateModalFlavor('${f}')" class="text-amber-400 focus:ring-amber-400 h-3.5 w-3.5 bg-black border-[#333333]">
+                                    <span class="text-xs font-semibold text-white">${f}</span>
+                                </label>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                currentModalSelectedFlavor = null;
+            }
+
+            // Special Notes
+            optionsHtml += `
+                <div class="space-y-2 pt-2 border-t border-[#1f1f1f]">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-[#d4d4d4]">
+                        Special Notes for Chef (Optional)
+                    </label>
+                    <input type="text" id="modalSpecialNotes" placeholder="e.g. Extra spicy, well done, less sauce" class="w-full bg-[#121212] text-white border border-[#262626] rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-amber-400">
+                </div>
+            `;
+
+            optionsContainer.innerHTML = optionsHtml;
+            updateModalPriceDisplay();
+
+            // Show Modal
+            const modal = document.getElementById('itemModal');
+            const card = document.getElementById('itemModalCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('translate-y-full');
+        }
+
+        function updateModalOptionSize(idx) {
+            currentModalSelectedOption = currentModalItem.sizes[idx];
+            updateModalPriceDisplay();
+        }
+
+        function updateModalOptionVariant(idx) {
+            currentModalSelectedOption = currentModalItem.variants[idx];
+            updateModalPriceDisplay();
+        }
+
+        function updateModalFlavor(flavor) {
+            currentModalSelectedFlavor = flavor;
+        }
+
+        function changeModalQty(delta) {
+            currentModalQty = Math.max(1, currentModalQty + delta);
+            document.getElementById('modalQtyDisplay').innerText = currentModalQty;
+            updateModalPriceDisplay();
+        }
+
+        function updateModalPriceDisplay() {
+            const unitPrice = currentModalSelectedOption ? currentModalSelectedOption.price : currentModalItem.price;
+            const total = unitPrice * currentModalQty;
+            document.getElementById('modalFinalPrice').innerText = `Rs. ${total}`;
+        }
+
+        function closeItemModal() {
+            const modal = document.getElementById('itemModal');
+            const card = document.getElementById('itemModalCard');
+            card.classList.add('translate-y-full');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            currentModalItem = null;
+        }
+
+        function confirmAddToCart() {
+            if (!currentModalItem) return;
+
+            const unitPrice = currentModalSelectedOption ? currentModalSelectedOption.price : currentModalItem.price;
+            const notes = document.getElementById('modalSpecialNotes') ? document.getElementById('modalSpecialNotes').value.trim() : '';
+            
+            let displayName = currentModalItem.name;
+            if (currentModalSelectedOption && currentModalSelectedOption.name !== 'Standard') {
+                displayName += ` (${currentModalSelectedOption.name})`;
+            }
+            if (currentModalSelectedFlavor) {
+                displayName += ` - [Flavor: ${currentModalSelectedFlavor}]`;
+            }
+
+            const cartItem = {
+                id: currentModalItem.id + '_' + Date.now(),
+                baseId: currentModalItem.id,
+                name: displayName,
+                price: unitPrice,
+                qty: currentModalQty,
+                option: currentModalSelectedOption ? currentModalSelectedOption.name : null,
+                flavor: currentModalSelectedFlavor,
+                notes: notes
+            };
+
+            cart.push(cartItem);
+            saveCart();
+            closeItemModal();
+            showToast(`Added ${cartItem.qty}x "${currentModalItem.name}" to basket!`);
+        }
+
+        // --- 8. CART MANAGEMENT & UI ---
+        function updateCartUI() {
+            const floatingBar = document.getElementById('floatingCartBar');
+            const floatingBadge = document.getElementById('floatingCartBadge');
+            const floatingTotal = document.getElementById('floatingCartTotal');
+            const drawerCountText = document.getElementById('drawerItemCountText');
+            const cartList = document.getElementById('cartItemsList');
+            const emptyView = document.getElementById('emptyCartView');
+            const checkoutSection = document.getElementById('checkoutFormSection');
+            const drawerFooter = document.getElementById('drawerFooterActions');
+            const billSubtotal = document.getElementById('billSubtotal');
+            const billTotal = document.getElementById('billTotal');
+            const minAlert = document.getElementById('minOrderAlert');
+            const minAlertText = document.getElementById('minOrderAlertText');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+
+            // Floating bar visibility
+            if (totalItems > 0) {
+                floatingBar.classList.remove('translate-y-24', 'opacity-0');
+                floatingBadge.innerText = totalItems;
+                floatingBadge.classList.add('cart-badge-anim');
+                setTimeout(() => floatingBadge.classList.remove('cart-badge-anim'), 400);
+                floatingTotal.innerText = `Rs. ${subtotal.toLocaleString()}`;
+            } else {
+                floatingBar.classList.add('translate-y-24', 'opacity-0');
+            }
+
+            // Drawer Items
+            drawerCountText.innerText = `${totalItems} item${totalItems === 1 ? '' : 's'} in basket`;
+            billSubtotal.innerText = `Rs. ${subtotal.toLocaleString()}`;
+            billTotal.innerText = `Rs. ${subtotal.toLocaleString()}`;
+
+            if (cart.length === 0) {
+                cartList.innerHTML = '';
+                emptyView.classList.remove('hidden');
+                checkoutSection.classList.add('hidden');
+                drawerFooter.classList.add('hidden');
+            } else {
+                emptyView.classList.add('hidden');
+                checkoutSection.classList.remove('hidden');
+                drawerFooter.classList.remove('hidden');
+
+                // Check Minimum Order (500 PKR)
+                if (subtotal < 500) {
+                    const diff = 500 - subtotal;
+                    minAlert.classList.remove('hidden');
+                    minAlertText.innerHTML = `Minimum order is <strong>Rs. 500</strong>. Add <strong>Rs. ${diff}</strong> more to qualify for delivery.`;
+                } else {
+                    minAlert.classList.add('hidden');
+                }
+
+                // Render cart items (Jet Black)
+                cartList.innerHTML = cart.map((item, idx) => `
+                    <div class="bg-[#121212] rounded-2xl p-3 border border-[#242424] flex items-center justify-between gap-2">
+                        <div class="flex-1 pr-2">
+                            <h5 class="font-bold text-xs text-white leading-tight">${item.name}</h5>
+                            ${item.notes ? `<p class="text-[10px] text-amber-400 italic mt-0.5">Note: ${item.notes}</p>` : ''}
+                            <span class="text-xs font-black text-amber-400 block mt-1">Rs. ${(item.price * item.qty).toLocaleString()}</span>
+                        </div>
+
+                        <!-- Quantity control -->
+                        <div class="flex items-center bg-[#050505] rounded-xl border border-[#242424] p-1 shadow-sm shrink-0">
+                            <button onclick="updateCartItemQty(${idx}, -1)" class="w-6 h-6 rounded-lg bg-[#1c1c1c] hover:bg-[#262626] text-white flex items-center justify-center text-[10px] font-bold active:scale-95 transition">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                            <span class="w-6 text-center font-black text-xs text-amber-400">${item.qty}</span>
+                            <button onclick="updateCartItemQty(${idx}, 1)" class="w-6 h-6 rounded-lg bg-amber-400 text-black flex items-center justify-center text-[10px] font-black active:scale-95 transition">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateCartItemQty(index, delta) {
+            if (index < 0 || index >= cart.length) return;
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            saveCart();
+        }
+
+        function openCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const card = document.getElementById('cartDrawerCard');
+            drawer.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('translate-y-full');
+        }
+
+        function closeCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const card = document.getElementById('cartDrawerCard');
+            card.classList.add('translate-y-full');
+            drawer.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        function handlePaymentChange(val) {
+            const onlineBox = document.getElementById('onlinePaymentCard');
+            if (val === 'JazzCash / EasyPaisa') {
+                onlineBox.classList.remove('hidden');
+            } else {
+                onlineBox.classList.add('hidden');
+            }
+        }
+
+        // --- 9. COPY TO CLIPBOARD FUNCTION ---
+        function copyToClipboard(text, btnId) {
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById(btnId);
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<i class="fa-solid fa-check text-black"></i> <span>Copied!</span>`;
+                btn.classList.remove('bg-amber-400', 'hover:bg-amber-300');
+                btn.classList.add('bg-emerald-400');
+                showToast(`Copied ${text} to clipboard!`);
+
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                    btn.classList.remove('bg-emerald-400');
+                    btn.classList.add('bg-amber-400', 'hover:bg-amber-300');
+                }, 2000);
+            }).catch(err => {
+                showToast(`Number: ${text}`);
+            });
+        }
+
+        // --- 10. WHATSAPP ORDER GENERATOR ---
+        function submitOrderToWhatsApp() {
+            if (cart.length === 0) {
+                alert('Your basket is empty! Please select some items first.');
+                return;
+            }
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+            if (subtotal < 500) {
+                alert('Minimum order limit is Rs. 500. Please add more items to proceed.');
+                return;
+            }
+
+            const address = document.getElementById('custAddress').value.trim();
+            const payment = document.getElementById('custPayment').value;
+            const notes = document.getElementById('custNotes').value.trim();
+
+            if (!address) {
+                alert('Please enter your Delivery Address & Landmark.');
+                document.getElementById('custAddress').focus();
+                return;
+            }
+
+            // Build Receipt Message
+            const orderId = 'PM-' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            let msg = `*NEW ORDER - THE PIZZA MASTER*
+`;
+            msg += `--------------------------------
+`;
+            msg += `*Order ID:* #${orderId}
+`;
+            msg += `*Time:* ${timeStr}
+
+`;
+
+            msg += `*ORDER ITEMS:*
+`;
+            cart.forEach((item, i) => {
+                msg += `* ${item.qty}x ${item.name}
+`;
+                if (item.notes) msg += `  (Note: ${item.notes})
+`;
+                msg += `  - Amount: Rs. ${(item.price * item.qty).toLocaleString()}
+`;
+            });
+
+            msg += `
+--------------------------------
+`;
+            msg += `*Subtotal:* Rs. ${subtotal.toLocaleString()}
+`;
+            msg += `*Delivery (within 3km):* FREE
+`;
+            msg += `*TOTAL AMOUNT:* Rs. ${subtotal.toLocaleString()}
+`;
+            msg += `*Payment Method:* ${payment}
+`;
+            if (payment.includes('JazzCash')) {
+                msg += `*Payment Sent to:* 0305-2555528 (The Pizza Master)
+`;
+            }
+            msg += `--------------------------------
+
+`;
+
+            msg += `*DELIVERY ADDRESS:*
+`;
+            msg += `${address}
+`;
+            if (notes) {
+                msg += `
+*Special Instructions:* ${notes}
+`;
+            }
+            msg += `
+_Please confirm the order and estimate delivery time. Thank you!_`;
+
+            // Open WhatsApp with direct pre-filled text
+            const whatsappNumber = "923052555528";
+            const encodedMsg = encodeURIComponent(msg);
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMsg}`;
+
+            // Show Confirmation Receipt Modal
+            document.getElementById('receiptPreviewBox').innerHTML = `
+                <div class="font-bold text-amber-400 border-b border-[#242424] pb-1 mb-1">Order #${orderId} Summary</div>
+                <div>Items: <strong>${cart.length} items (${cart.reduce((s,i)=>s+i.qty,0)} qty)</strong></div>
+                <div>Total Bill: <strong class="text-amber-400">Rs. ${subtotal.toLocaleString()}</strong></div>
+                <div>Address: <strong>${address}</strong></div>
+                <div>Payment: <strong>${payment}</strong></div>
+            `;
+
+            // Trigger WhatsApp Link
+            window.open(whatsappUrl, '_blank');
+
+            // Show success modal
+            closeCartDrawer();
+            openSuccessModal();
+
+            // Clear Cart
+            cart = [];
+            saveCart();
+        }
+
+        function openSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const card = document.getElementById('successModalCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+        }
+
+        function closeSuccessModal() {
+            const modal = document.getElementById('successModal');
+            const card = document.getElementById('successModalCard');
+            card.classList.add('scale-95');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // --- 11. TOAST NOTIFICATION ---
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = msg;
+            toast.classList.remove('-translate-y-16', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('-translate-y-16', 'opacity-0');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
