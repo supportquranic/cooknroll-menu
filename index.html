@@ -1654,11 +1654,20 @@
             // Filter by Search Query
             if (searchQuery.trim() !== '') {
                 const query = searchQuery.toLowerCase().trim();
-                filtered = filtered.filter(item => 
-                    item.name.toLowerCase().includes(query) ||
-                    item.desc.toLowerCase().includes(query) ||
-                    (item.flavors && item.flavors.some(f => f.toLowerCase().includes(query)))
-                );
+                const isSearchingDealsExplicitly = query.includes('deal');
+
+                filtered = filtered.filter(item => {
+                    // Exclude combo deals from general product keyword searches (e.g. zinger, pizza)
+                    if (item.category === 'deals' && currentCategory !== 'deals' && !isSearchingDealsExplicitly) {
+                        return false;
+                    }
+
+                    const matchName = item.name.toLowerCase().includes(query);
+                    const matchDesc = item.category !== 'deals' && item.desc.toLowerCase().includes(query);
+                    const matchFlavors = item.flavors && item.flavors.some(f => f.toLowerCase().includes(query));
+
+                    return matchName || matchDesc || matchFlavors;
+                });
             }
 
             if (filtered.length === 0) {
