@@ -1560,15 +1560,23 @@
         // --- 3. INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             renderCategories();
+            initNavAutoScroll();
             renderProducts();
             loadCartFromStorage();
             updateCartUI();
         });
 
-        // --- 4. RENDER CATEGORY PILLS ---
+        // --- 4. RENDER CATEGORY PILLS & AUTO-SCROLL LOOP ---
+        let navAutoScrollId = null;
+        let isNavUserInteracting = false;
+        let navUserPauseTimeout = null;
+
         function renderCategories() {
             const nav = document.getElementById('categoryNav');
-            nav.innerHTML = MENU_DATA.categories.map(cat => `
+            // Duplicate categories list to create a seamless 100% infinite loop
+            const categoriesToRender = [...MENU_DATA.categories, ...MENU_DATA.categories];
+
+            nav.innerHTML = categoriesToRender.map(cat => `
                 <button 
                     onclick="selectCategory('${cat.id}')"
                     class="category-pill shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 border flex items-center gap-1.5 ${
@@ -1582,6 +1590,37 @@
             `).join('');
         }
 
+        function initNavAutoScroll() {
+            const nav = document.getElementById('categoryNav');
+            if (!nav) return;
+
+            function pauseAutoScroll() {
+                isNavUserInteracting = true;
+                clearTimeout(navUserPauseTimeout);
+                navUserPauseTimeout = setTimeout(() => {
+                    isNavUserInteracting = false;
+                }, 2500);
+            }
+
+            nav.addEventListener('touchstart', pauseAutoScroll, { passive: true });
+            nav.addEventListener('mousedown', pauseAutoScroll);
+            nav.addEventListener('wheel', pauseAutoScroll, { passive: true });
+
+            function scrollStep() {
+                if (!isNavUserInteracting) {
+                    nav.scrollLeft += 0.6; // Gentle smooth auto-scroll speed
+                    const halfWidth = nav.scrollWidth / 2;
+                    if (halfWidth > 0 && nav.scrollLeft >= halfWidth) {
+                        nav.scrollLeft = 0;
+                    }
+                }
+                navAutoScrollId = requestAnimationFrame(scrollStep);
+            }
+
+            cancelAnimationFrame(navAutoScrollId);
+            navAutoScrollId = requestAnimationFrame(scrollStep);
+        }
+
         function selectCategory(catId) {
             currentCategory = catId;
             renderCategories();
@@ -1590,6 +1629,13 @@
             document.getElementById('currentSectionTitle').textContent = categoryObj ? categoryObj.name : 'Menu';
             document.getElementById('currentSectionBadge').textContent = categoryObj ? categoryObj.badge : 'All Items';
             
+            // Pause auto-scroll briefly on category selection
+            isNavUserInteracting = true;
+            clearTimeout(navUserPauseTimeout);
+            navUserPauseTimeout = setTimeout(() => {
+                isNavUserInteracting = false;
+            }, 3000);
+
             renderProducts();
         }
 
